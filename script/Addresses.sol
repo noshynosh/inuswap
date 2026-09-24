@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
+import {PriceRoute} from "./PriceRoute.sol";
+
 /// Every Robinhood Chain (4663) address the scripts and fork tests use. Add new partner tokens here.
 library Addresses {
     // ------------------------------------------------------------ Uniswap v4
@@ -27,6 +29,10 @@ library Addresses {
     // ----------------------------------------------------------- price pools
     /// The existing hookless AI/INU pool (0.2%, tick spacing 20), used as the AI price source
     bytes32 internal constant AI_INU_POOL = 0xcc9ff7f12eb7546b83431ccd44068a424cba6438b398ab1766b787b11f439c3c;
+    /// Deepest hookless X/AI pools, used to price X through AI
+    bytes32 internal constant BONER_AI_POOL = 0x1f1778596d8c1ee3e1eaf64ea83a5e77063b142fa3ef59a7c81e520c516379bc; // 0.9%
+    bytes32 internal constant MEME_AI_POOL = 0x2c226b0a1045aff5e702928a6e5ddfa480092913acf722a06ee2d7041bb3dd4e; // 0.31%
+    bytes32 internal constant MOO_AI_POOL = 0x827bc6826b2328942e512791bb1f653335d6b496330d3da6a7b96eda60456432; // 0.9%
 
     /// All partner tokens (the X in iNu/X)
     function partners() internal pure returns (address[4] memory) {
@@ -43,9 +49,21 @@ library Addresses {
         revert(string.concat("unknown token: ", symbol));
     }
 
-    /// An existing pool of the same two tokens (iNu + partner) whose price the new pool starts at
-    function pricePool(address token) internal pure returns (bytes32) {
-        if (token == AI) return AI_INU_POOL;
-        revert("no price source for this token yet");
+    /// The live-price route from INU to a partner token, read at launch for the new pool's starting price.
+    /// AI prices directly off the AI/INU pool; other tokens go INU -> AI -> X through their deepest X/AI pool.
+    function priceRoute(address token) internal pure returns (PriceRoute.Hop[] memory hops) {
+        if (token == AI) {
+            hops = new PriceRoute.Hop[](1);
+            hops[0] = PriceRoute.Hop(AI_INU_POOL, INU, AI);
+            return hops;
+        }
+        bytes32 xAi;
+        if (token == BONER) xAi = BONER_AI_POOL;
+        else if (token == MEME) xAi = MEME_AI_POOL;
+        else if (token == MOO) xAi = MOO_AI_POOL;
+        else revert("no price route for this token");
+        hops = new PriceRoute.Hop[](2);
+        hops[0] = PriceRoute.Hop(AI_INU_POOL, INU, AI);
+        hops[1] = PriceRoute.Hop(xAi, AI, token);
     }
 }

@@ -41,9 +41,12 @@ script/Addresses.sol             Every chain / token address (edit this to add t
 script/DeployHook.s.sol          Mines a CREATE2 salt for the hook's permission bits and deploys it
 script/CreatePool.s.sol          Creates one iNu/X pool and seeds full-range liquidity in one transaction
 script/HookMiner.sol             Salt miner (from Uniswap v4-periphery)
+script/PriceRoute.sol            Chains live pool prices to price a pair with no direct pool
+script/PoolInfo.s.sol            Read-only: price, tick and liquidity for any pool ids
 test/INuSwapHook.t.sol           Local tests against a fresh v4 deployment with mock tokens
 test/fork/INuSwapHook.fork.t.sol Hook tests against the real Robinhood Chain contracts (forked)
 test/fork/TokenChecks.t.sol      Confirms each token is a plain ERC-20 (no transfer tax, no rebasing, can burn)
+test/fork/PriceRoute.fork.t.sol  Checks every launch-price route against live pools
 ```
 
 ## Setup
@@ -118,7 +121,7 @@ forge verify-contract <hook-address> src/INuSwapHook.sol:INuSwapHook --chain-id 
 The script handles all of the following:
 
 - **Pair:** sorts the two tokens.
-- **Price:** reads the market price live from an existing pool of the same tokens. You never enter a price.
+- **Price:** reads the market price live along a route of existing pools (for example INU → AI → BONER). You never enter a price.
 - **Launch:** creates the pool and adds full-range liquidity in one transaction, so nobody can create the pool first at a bad price.
 - **Check:** confirms afterwards that the pool matches the market price and launched at 1× fees.
 
@@ -186,7 +189,7 @@ Explorer: https://robinhoodchain.blockscout.com
 
 ### Adding a token
 
-In `script/Addresses.sol`, add a constant for it, then add it to `partners()` and `partner()`. Run `forge test --match-path test/fork/TokenChecks.t.sol` to confirm it's a plain ERC-20. The pool script also needs a price source for it in `pricePool()`.
+In `script/Addresses.sol`, add a constant for it, then add it to `partners()` and `partner()`. Run `forge test --match-path test/fork/TokenChecks.t.sol` to confirm it's a plain ERC-20. Then give it a price route in `priceRoute()`: usually INU → AI → X through the deepest X/AI pool, the way BONER, MEME and MOO are priced. `test/fork/PriceRoute.fork.t.sol` checks each route against an independent calculation.
 
 ## Pool settings
 

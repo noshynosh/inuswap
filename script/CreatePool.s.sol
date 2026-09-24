@@ -15,6 +15,7 @@ import {Currency} from "v4-core/types/Currency.sol";
 import {LiquidityAmounts} from "../lib/v4-periphery/src/libraries/LiquidityAmounts.sol";
 import {INuSwapHook} from "../src/INuSwapHook.sol";
 import {Addresses} from "./Addresses.sol";
+import {PriceRoute} from "./PriceRoute.sol";
 
 interface IPositionManager {
     function multicall(bytes[] calldata data) external payable returns (bytes[] memory);
@@ -26,8 +27,8 @@ interface IPermit2 {
     function approve(address token, address spender, uint160 amount, uint48 expiration) external;
 }
 
-/// Creates ONE iNu/X pool on the hook and seeds full-range liquidity, atomically, at the price
-/// of an existing iNu/X pool (Addresses.pricePool). Nothing is spent beyond AMOUNT_INU / AMOUNT_TOKEN.
+/// Creates ONE iNu/X pool on the hook and seeds full-range liquidity, atomically, at the live market
+/// price read along Addresses.priceRoute (e.g. INU -> AI -> X). Nothing is spent beyond AMOUNT_INU / AMOUNT_TOKEN.
 ///
 /// Dry run:  forge script script/CreatePool.s.sol --rpc-url robinhood --sender <wallet>
 /// For real: forge script script/CreatePool.s.sol --rpc-url robinhood --account deployer --broadcast
@@ -49,7 +50,6 @@ contract CreatePool is Script {
         IPoolManager manager = IPoolManager(Addresses.POOL_MANAGER);
         INuSwapHook hook = INuSwapHook(Addresses.HOOK);
         address token = Addresses.partner(vm.envString("TOKEN"));
-        PoolId pricePool = PoolId.wrap(Addresses.pricePool(token));
         uint256 amountInu = vm.envUint("AMOUNT_INU");
         uint256 amountToken = vm.envUint("AMOUNT_TOKEN");
 
@@ -66,9 +66,10 @@ contract CreatePool is Script {
         });
         (uint256 amount0, uint256 amount1) = inuIs0 ? (amountInu, amountToken) : (amountToken, amountInu);
 
-        // Starting price = the existing pool's price (same two tokens, so same ordering)
-        (uint160 sqrtP,,,) = manager.getSlot0(pricePool);
-        require(sqrtP != 0, "price pool not found");
+        // Starting price = live market price along the route (read now, used in the same broadcast)
+        uint160 sqrtP = PriceRoute.sqrtPriceX96(
+            manager, Addresses.priceRoute(token), Currency.unwrap(key.currency0), Currency.unwrap(key.currency1)
+        );
         (uint160 existing,,,) = manager.getSlot0(key.toId());
         require(existing == 0, "pool already exists");
 
