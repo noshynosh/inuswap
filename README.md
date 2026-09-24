@@ -10,7 +10,7 @@ Uniswap v4 burn pools on **Robinhood Chain** that make **iNu the hub of the [Lon
 - **For LPs:** 0.3% to LPs when the market is calm, and fees rise up to 3× in volatile markets, when LPs need protection most.
 - **Trustless:** no owner, no admin keys, no upgrades. The source is verified and the hook is approved for Uniswap routing.
 
-A low-fee [iNu/USDG exit pool](https://app.uniswap.org/explore/pools/robinhood/0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5) (0.05%, no hook) gives traders a cheap route into and out of dollars.
+**The exit pool pulls trades into the burn pools.** Most traders buy and sell LONG tokens with dollars. The [iNu/USDG exit pool](https://app.uniswap.org/explore/pools/robinhood/0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5) charges only 0.05%, so the dollar leg through iNu is nearly free. That makes routes like **BONER → iNu → USDG** and **USDG → iNu → MEME** competitive with each token's own pools. When a router picks that path, the trade passes through a burn pool and burns both tokens on the way. The cheaper the exit, the more everyday buys and sells route through iNu.
 
 Anyone can create a pool on the hook, for any pair.
 
@@ -30,6 +30,8 @@ Anyone can create a pool on the hook, for any pair.
 | Pool | Uniswap | Pool ID | Fee |
 |---|---|---|---|
 | USDG / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5) | `0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5` | 0.05% |
+
+The exit pool is deliberately cheap and unhooked: it's the on-ramp and off-ramp that feeds dollar trades into the burn pools above.
 
 - **Hook:** [`0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=contract). The source is verified, and it's on Uniswap's routing allowlist.
 - **Burn totals:** read [`totalBurned(token)` / `burnedByPool(poolId, token)`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=read_contract), or check the [event log](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=logs).
