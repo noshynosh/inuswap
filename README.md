@@ -10,11 +10,13 @@ Uniswap v4 burn pools on **Robinhood Chain** that make **iNu the hub of the [Lon
 - **For LPs:** 0.3% to LPs when the market is calm, and fees rise up to 3× in volatile markets, when LPs need protection most.
 - **Trustless:** no owner, no admin keys, no upgrades. The source is verified and the hook is approved for Uniswap routing.
 
-A low-fee iNu/USDG exit pool (no hook) is planned, so traders have a cheap route into and out of dollars.
+A low-fee [iNu/USDG exit pool](https://app.uniswap.org/explore/pools/robinhood/0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5) (0.05%, no hook) gives traders a cheap route into and out of dollars.
 
 Anyone can create a pool on the hook, for any pair.
 
 ## Pools
+
+**Burn pools (on the hook):**
 
 | Pool | Uniswap | Pool ID | Created |
 |---|---|---|---|
@@ -22,6 +24,12 @@ Anyone can create a pool on the hook, for any pair.
 | INU / BONER | [pool](https://app.uniswap.org/explore/pools/robinhood/0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b) | `0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b` | [tx](https://robinhoodchain.blockscout.com/tx/0x9e1649ed83fad9a8749da99f2f7af85f6e3997f430fe35262a8b46ec33c738fb) |
 | INU / MEME | [pool](https://app.uniswap.org/explore/pools/robinhood/0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269) | `0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269` | [tx](https://robinhoodchain.blockscout.com/tx/0x689014ffec83df4a5ece562e189feaf707846aa000ef20d538a478a6882573a2) |
 | INU / MOO | [pool](https://app.uniswap.org/explore/pools/robinhood/0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403) | `0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403` | [tx](https://robinhoodchain.blockscout.com/tx/0xc494a856595f058438931f21650949750519eaa2e3e4a1931775b5620bf01e8d) |
+
+**Exit pool (no hook, no burn):**
+
+| Pool | Uniswap | Pool ID | Fee |
+|---|---|---|---|
+| USDG / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5) | `0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5` | 0.05% |
 
 - **Hook:** [`0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=contract). The source is verified, and it's on Uniswap's routing allowlist.
 - **Burn totals:** read [`totalBurned(token)` / `burnedByPool(poolId, token)`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=read_contract), or check the [event log](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=logs).

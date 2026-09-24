@@ -28,6 +28,8 @@ library Addresses {
     bytes32 internal constant INUSWAP_INU_BONER_POOL = 0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b;
     bytes32 internal constant INUSWAP_MEME_INU_POOL = 0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269;
     bytes32 internal constant INUSWAP_INU_MOO_POOL = 0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403;
+    /// USDG/INU exit pool: 0.05%, tick spacing 5, no hook
+    bytes32 internal constant USDG_INU_EXIT_POOL = 0xe26776339ac6fe3f8f9fe2ba2d4e36eaffa9c5a71d65f01832324f28b7873dd5;
 
     // ----------------------------------------------------------- price pools
     /// The existing hookless AI/INU pool (0.2%, tick spacing 20), used as the AI price source
