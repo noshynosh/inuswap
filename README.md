@@ -1,10 +1,16 @@
 # iNuSwap
 
-Uniswap v4 pools on **Robinhood Chain** that pair **iNu** with top [Long.xyz](https://long.xyz) tokens. All pools share one hook that:
+![iNuSwap: iNu as the hub for Long.xyz tokens, every hop through a burn pool burns both tokens](docs/inuswap.png)
 
-- **burns both tokens on every swap** (0.1% of each side goes to `0x…dEaD`)
-- **raises fees in volatile markets** to protect LPs: 0.5% total when calm, up to 1.5%
-- **has no owner or admin** and can't be upgraded
+Uniswap v4 burn pools on **Robinhood Chain** that make **iNu the hub of the [Long.xyz](https://long.xyz) ecosystem**.
+
+**Why it matters**
+- **For every LONG token:** each trade through an iNuSwap pool burns 0.1% of *both* tokens, so every listed project's supply shrinks with volume, not just iNu's.
+- **For iNu:** iNu sits in the middle of every route. BONER → iNu → USDG, USDG → iNu → MEME, AI → iNu → MOO: routers only need iNu to connect any two LONG tokens. A meme-to-meme swap crosses two burn pools, so iNu is burned twice.
+- **For LPs:** 0.3% to LPs when the market is calm, and fees rise up to 3× in volatile markets, when LPs need protection most.
+- **Trustless:** no owner, no admin keys, no upgrades. The source is verified and the hook is approved for Uniswap routing.
+
+A low-fee iNu/USDG exit pool (no hook) is planned, so traders have a cheap route into and out of dollars.
 
 Anyone can create a pool on the hook, for any pair.
 
@@ -12,9 +18,9 @@ Anyone can create a pool on the hook, for any pair.
 
 | Pool | Uniswap | Pool ID | Created |
 |---|---|---|---|
-| AI / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad) | `0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad` | [tx](https://robinhoodchain.blockscout.com/tx/0xde78c49ba0a9b38af6a8d6953eb93a5e519492abaf76f6447d6f521f46688178) |
+| INU /AI | [pool](https://app.uniswap.org/explore/pools/robinhood/0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad) | `0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad` | [tx](https://robinhoodchain.blockscout.com/tx/0xde78c49ba0a9b38af6a8d6953eb93a5e519492abaf76f6447d6f521f46688178) |
 | INU / BONER | [pool](https://app.uniswap.org/explore/pools/robinhood/0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b) | `0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b` | [tx](https://robinhoodchain.blockscout.com/tx/0x9e1649ed83fad9a8749da99f2f7af85f6e3997f430fe35262a8b46ec33c738fb) |
-| MEME / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269) | `0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269` | [tx](https://robinhoodchain.blockscout.com/tx/0x689014ffec83df4a5ece562e189feaf707846aa000ef20d538a478a6882573a2) |
+| INU / MEME | [pool](https://app.uniswap.org/explore/pools/robinhood/0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269) | `0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269` | [tx](https://robinhoodchain.blockscout.com/tx/0x689014ffec83df4a5ece562e189feaf707846aa000ef20d538a478a6882573a2) |
 | INU / MOO | [pool](https://app.uniswap.org/explore/pools/robinhood/0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403) | `0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403` | [tx](https://robinhoodchain.blockscout.com/tx/0xc494a856595f058438931f21650949750519eaa2e3e4a1931775b5620bf01e8d) |
 
 - **Hook:** [`0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=contract). The source is verified, and it's on Uniswap's routing allowlist.
