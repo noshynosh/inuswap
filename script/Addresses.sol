@@ -25,6 +25,9 @@ library Addresses {
     // ------------------------------------------------------------ iNuSwap pools
     /// AI/INU on the hook (created in tx 0xde78c49ba0a9b38af6a8d6953eb93a5e519492abaf76f6447d6f521f46688178)
     bytes32 internal constant INUSWAP_AI_INU_POOL = 0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad;
+    bytes32 internal constant INUSWAP_INU_BONER_POOL = 0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b;
+    bytes32 internal constant INUSWAP_MEME_INU_POOL = 0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269;
+    bytes32 internal constant INUSWAP_INU_MOO_POOL = 0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403;
 
     // ----------------------------------------------------------- price pools
     /// The existing hookless AI/INU pool (0.2%, tick spacing 20), used as the AI price source

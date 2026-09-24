@@ -1,12 +1,33 @@
 # iNuSwap
 
-A set of Uniswap v4 pools on **Robinhood Chain** that pair **iNu** with the top [Long.xyz](https://long.xyz) tokens (iNu/AI, iNu/BONER, iNu/MEME, ...). Every pool shares one custom hook, which:
+Uniswap v4 pools on **Robinhood Chain** that pair **iNu** with top [Long.xyz](https://long.xyz) tokens. All pools share one hook that:
 
-- **Burns both tokens on every swap.** A small cut of the token going in and of the token coming out is sent to `0x…dEaD`, so every listed project benefits from volume, not just iNu.
-- **Raises fees when the market is volatile** to protect liquidity providers, then decays them back to normal.
-- **Has no owner, no admin keys, and isn't upgradeable.** All parameters are constants.
+- **burns both tokens on every swap** (0.1% of each side goes to `0x…dEaD`)
+- **raises fees in volatile markets** to protect LPs: 0.5% total when calm, up to 1.5%
+- **has no owner or admin** and can't be upgraded
 
-iNu is the hub: a swap between any two LONG tokens can route A → iNu → B.
+Anyone can create a pool on the hook, for any pair.
+
+## Pools
+
+| Pool | Uniswap | Pool ID | Created |
+|---|---|---|---|
+| AI / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad) | `0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad` | [tx](https://robinhoodchain.blockscout.com/tx/0xde78c49ba0a9b38af6a8d6953eb93a5e519492abaf76f6447d6f521f46688178) |
+| INU / BONER | [pool](https://app.uniswap.org/explore/pools/robinhood/0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b) | `0x2644f63be98e71236db9cfabbcce0a05c489d8a9154ed72b399807567b224e5b` | [tx](https://robinhoodchain.blockscout.com/tx/0x9e1649ed83fad9a8749da99f2f7af85f6e3997f430fe35262a8b46ec33c738fb) |
+| MEME / INU | [pool](https://app.uniswap.org/explore/pools/robinhood/0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269) | `0x4b5491ed69d6e49259f714b72b09f153742628bb48377aaeb1bfdc1b829fb269` | [tx](https://robinhoodchain.blockscout.com/tx/0x689014ffec83df4a5ece562e189feaf707846aa000ef20d538a478a6882573a2) |
+| INU / MOO | [pool](https://app.uniswap.org/explore/pools/robinhood/0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403) | `0x52904913001b1c7cf60a3cff1696f64f9b14fe6be3e0198811de6506e5d1f403` | [tx](https://robinhoodchain.blockscout.com/tx/0xc494a856595f058438931f21650949750519eaa2e3e4a1931775b5620bf01e8d) |
+
+- **Hook:** [`0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=contract). The source is verified, and it's on Uniswap's routing allowlist.
+- **Burn totals:** read [`totalBurned(token)` / `burnedByPool(poolId, token)`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=read_contract), or check the [event log](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=logs).
+- **Pool settings:** dynamic fee (`0x800000`), tick spacing 60, and the hook above.
+
+## Adding liquidity
+
+1. Open a pool's **Uniswap** link above and click **Add liquidity**. Connect a wallet on Robinhood Chain.
+2. Choose **Full range**, which is recommended so the position always earns. Enter an amount of one token and the other fills in.
+3. Approve and confirm. You'll earn the LP fee (0.3% of each swap, up to 0.9% in volatile markets) and can withdraw anytime from **Positions**.
+
+Uniswap may flag the pool as using a custom hook. That's expected.
 
 ## Fees
 
@@ -142,27 +163,8 @@ TOKEN=AI AMOUNT_INU=<wei> AMOUNT_TOKEN=<wei> \
 - `hook.currentFees(key)` returns multiplier `1`, LP fee `3000` and burn fee `2000`.
 - After a small test swap, `totalBurned` goes up for both tokens, and so does the dead address's balance.
 
-## Live deployment (Robinhood Chain)
+## Reading on-chain values
 
-### Hook
-
-| | |
-|---|---|
-| Address | [`0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc`](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=contract) (source verified) |
-| Deploy tx | [`0x744e28fc…c429`](https://robinhoodchain.blockscout.com/tx/0x744e28fcee7b02d42906911439fbcd68b256587eb185d71ac51fd81a7effc429) |
-| Read burns / fees | [Read contract](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=read_contract): `totalBurned(token)`, `burnedByPool(poolId, token)`, `currentFees(key)` |
-| Event history | [Logs](https://robinhoodchain.blockscout.com/address/0xac5187fA1FFBD9882cE6Eba5B29aA0A6692e50Cc?tab=logs): every `Burned` and `FeeApplied` |
-
-### Pools
-
-| Pair | Pool ID | Links |
-|---|---|---|
-| AI / INU | `0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad` | [Uniswap pool](https://app.uniswap.org/explore/pools/robinhood/0xece5b96aee6848dd9c0c549e8700878be0cfbaf07ef676e829e33a99fc3e35ad) · [creation tx](https://robinhoodchain.blockscout.com/tx/0xde78c49ba0a9b38af6a8d6953eb93a5e519492abaf76f6447d6f521f46688178) · [seed LP position #3145504](https://app.uniswap.org/positions/v4/robinhood/3145504) |
-
-- **AI / INU:** launched at 27.44 INU per AI with about $100 per side. The key is `(AI, INU, 0x800000, 60, hook)`.
-- **First swap through the hook:** [7 AI → INU](https://robinhoodchain.blockscout.com/tx/0xc80d1519063fe2c9342050d663258b749396417869b14deaaedf0c7eb4009a93). It burned 0.00701 AI and 0.188 INU, with fees at 1×.
-
-### Reading on-chain values
 
 - **Raw units:** Blockscout's Read contract shows raw token units. LONG tokens use 18 decimals, so `187979629532859129` means 0.1880 INU.
 - **Uniswap UI dollar values:** unreliable for these new, small pools. It once showed a $15 fee on a trade that earned $0.006. Trust the on-chain numbers.
@@ -190,15 +192,6 @@ Explorer: https://robinhoodchain.blockscout.com
 ### Adding a token
 
 In `script/Addresses.sol`, add a constant for it, then add it to `partners()` and `partner()`. Run `forge test --match-path test/fork/TokenChecks.t.sol` to confirm it's a plain ERC-20. Then give it a price route in `priceRoute()`: usually INU → AI → X through the deepest X/AI pool, the way BONER, MEME and MOO are priced. `test/fork/PriceRoute.fork.t.sol` checks each route against an independent calculation.
-
-## Pool settings
-
-| Setting | Value |
-|---|---|
-| Fee | Dynamic (`0x800000`); the hook sets it on every swap |
-| Tick spacing | 60 |
-| Liquidity | Full range (ticks −887220 to 887220) recommended; custom ranges work too |
-| Starting price | The current market price, read on-chain |
 
 ## Risks
 
